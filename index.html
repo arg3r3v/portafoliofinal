@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerardo Arcos</title>
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="img/logo.png" type="image/png">
+</head>
+<body>
+    <header>
+        <h1>GERARDO ARCOS</h1>
+        <nav>
+            <ul id="nav-list">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="biografia.html">Biografía</a></li>
+                <li><a href="proyectos.html">Proyectos</a></li>
+                <li><a href="https://arg3r3v.github.io/axolotl/juego.html">Videojuegos</a></li>
+            </ul>
+        </nav>
+        <button id="menu-button"><img src="img/menu.png" alt="Menú"></button>
+    </header>
+    <div id="overlay"></div>
+    <div id="fullscreen-menu">
+        <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="biografia.html">Biografía</a></li>
+                <li><a href="proyectos.html">Proyectos</a></li>
+                <li><a href="#equipo">Videojuegos</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+        </ul>
+    </div>
+
+    <a-scene>
+        <a-sky src="img/imagen360.png" rotation="0 0 0"></a-sky>
+        <a-entity camera look-controls position="0 0 0"></a-entity>
+    </a-scene>
+
+    <div id="poema">
+        <h2>PORQUE AÚN SOY JOVEN</h2>
+            <p class="poem">
+                Porque aún soy joven, y algo necio,<br>
+                Aún soy joven para errar sin malicia,<br>
+                Para amar con verdad y sin prisa,<br>
+                Para aprender lo que el tiempo avisa,<br>
+                Y perderme en charlas de risa,<br>
+                En conversaciones sin juicio.
+            </p>
+            <p class="poem">
+                Pobres los jóvenes que en la juventud se hallan,<br>
+                Tan enfermos de sueños que nunca estallan,<br>
+                Malaventurados los que deben soportar,<br>
+                La llama eterna que no pueden apagar.
+            </p>
+    </div>
+
+    <script defer src="script.js"></script>
+</body>
+</html>

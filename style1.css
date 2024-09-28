@@ -1,0 +1,226 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Lora', serif;
+    background-color: #000;
+    color: white;
+    overflow: hidden;
+    text-align: center;
+    font-size: 3vh;
+}
+
+.canvas-container {
+    width: 100%;
+    height: 100vh;
+    overflow: auto;
+    position: relative;
+}
+
+.canvas {
+    width: 4800px;
+    height: 2700px;
+    position: relative;
+    background: url('img/piso.png') no-repeat center center;
+    background-size: 100%;
+}
+
+.canvas-container::-webkit-scrollbar {
+    width: 1vh;
+    height: 1vh;
+    background-color: transparent;
+}
+
+.canvas-container::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4%;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #000;
+    color: #fff;
+    padding: 0.5% 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1001;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    letter-spacing: 0.2em;
+    font-weight: 400;
+}
+
+nav {
+    padding: 0 10%;
+    display: block;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    margin-left: 10px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: #6A0DAD;
+}
+
+#menu-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    right: 2%;
+    z-index: 1002;
+    padding: 0;
+}
+
+#menu-button img {
+    width: 1.5rem;
+    height: auto;
+}
+
+#overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+}
+
+#fullscreen-menu {
+    display: none;
+    position: fixed;
+    top: 5%;
+    right: 0;
+    width: 60%;
+    height: 100%;
+    background-color: #000;
+    z-index: 1000;
+    text-align: left;
+    padding-top: 2%;
+    transition: transform 0.3s ease;
+    transform: translateX(100%);
+}
+
+#fullscreen-menu.open {
+    display: block;
+    transform: translateX(0);
+}
+
+#fullscreen-menu ul {
+    list-style: none;
+    padding: 0;
+}
+
+#fullscreen-menu ul li {
+    margin: 10% 5%;
+}
+
+#fullscreen-menu ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.3rem;
+    transition: color 0.3s;
+}
+
+#fullscreen-menu footer {
+    margin: 15% 0;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    text-align: center;
+}
+
+#fullscreen-menu footer a:hover {
+    color: #6A0DAD;
+}
+
+@media (min-width: 768px) {
+    #menu-button {
+        display: none;
+    }
+
+    #fullscreen-menu {
+        display: none;
+    }
+
+    header h1 {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 767px) {
+    nav {
+        display: none;
+    }
+
+    #menu-button {
+        display: flex;
+        align-items: center;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+}
+
+.section {
+    position: absolute;
+    width: 200px;
+    height: auto;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+#seccion1 {
+    top: 200px;
+    left: 300px;
+}
+
+#seccion2 {
+    top: 1000px;
+    left: 1000px;
+}
+
+#seccion3 {
+    top: 1500px;
+    left: 1800px;
+}
+
+.section-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+}
+
+.section-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
