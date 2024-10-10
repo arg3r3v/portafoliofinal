@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         linterna.style.left = `${touch.clientX - linterna.offsetWidth / 2}px`;
         linterna.style.top = `${touch.clientY - linterna.offsetHeight / 2}px`;
         e.preventDefault(); // Evitar scroll
-    });
+    }, { passive: false });  // Desactivar el modo pasivo
 
     // Mostrar la linterna cuando el usuario toca la pantalla
     document.addEventListener('touchstart', (e) => {
@@ -40,6 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
         linterna.style.left = `${touch.clientX - linterna.offsetWidth / 2}px`;
         linterna.style.top = `${touch.clientY - linterna.offsetHeight / 2}px`;
         e.preventDefault();
-    });
+    }, { passive: false });  // Desactivar el modo pasivo
 
 });
