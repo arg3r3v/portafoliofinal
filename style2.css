@@ -21,6 +21,36 @@ body {
     pointer-events: none;
 }
 
+#menu {
+    padding: 7% 10% 1%;
+    text-align: center;
+}
+
+#menu h2{
+    font-size: 3vh;
+    text-align: center;
+    color: #fff; 
+}
+
+button {
+        font-family: 'Lora', serif;
+        font-size: 3vh;
+        font-weight: bold;
+        color: #ffffff; /* Color blanco */
+        background-color: transparent; /* Fondo transparente */
+        border: 2px solid #ffffff; /* Borde blanco */
+        border-radius: 5px;
+        padding: 10px 20px;
+        margin: 0 10px;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    button:hover {
+        background-color: #ffffff; /* Fondo blanco al pasar el mouse */
+        color: #000000; /* Texto negro al pasar el mouse */
+    }
+
 @media (max-width: 767px) {
   #linterna {
     width: 400px;
@@ -182,7 +212,6 @@ nav ul li a:hover {
     }
 
     #video {
-    padding: 7% 10% 1%;
     text-align: center;
     width: 100%; 
     max-width: 800px; 
@@ -201,6 +230,16 @@ nav ul li a:hover {
     }
 
     #retrato-image img {
+    width: 50%;
+    padding: 1% 10% 3%;
+    }
+
+    #recientes img {
+    width: 40%;
+    padding: 1% 10% 3%;
+    }
+
+    #colectivos img {
     width: 50%;
     padding: 1% 10% 3%;
     }
@@ -249,6 +288,28 @@ nav ul li a:hover {
     padding: 1% 10% 5%;
     }
 
+    #recientes img {
+    width: 80%;
+    padding: 1% 10% 5%;
+    }
+
+    #colectivos img {
+        width: 80%;
+        padding: 1% 10% 5%;
+    }
+
+    #menu {
+        margin-top: 15%; /* Espacio superior */
+        margin-bottom: 0px; /* Eliminar espacio inferior */
+        padding: 0; /* Aumentamos el espacio alrededor */
+    }
+
+    /* Estilo para los botones en móviles */
+    button {
+        font-size: 2.5vh; /* Reducimos el tamaño de fuente */
+        padding: 10px 20px; /* Aumentamos el tamaño de los botones */
+        margin: 10px 0; /* Espaciado vertical entre botones */
+    }
 }
 
 #video h2 {
@@ -272,6 +333,54 @@ nav ul li a:hover {
 }
 
 #semblanza p {
+    margin-bottom: 1%;
+    font-size: 2.5vh;
+}
+
+#recientes {
+    padding: 1% 10%;
+    line-height: 1.6;
+    text-align: center;
+    color: #fff; 
+}
+
+#recientes h2 {
+    font-size: 3vh;
+    text-align: center;
+    color: #fff; 
+}
+
+#recientes h3 {
+    font-size: 2.5vh;
+    text-align: center;
+    color: #fff; 
+}
+
+#recientes p {
+    margin-bottom: 1%;
+    font-size: 2.5vh;
+}
+
+#colectivos {
+    padding: 1% 10%;
+    line-height: 1.6;
+    text-align: center;
+    color: #fff; 
+}
+
+#colectivos h2 {
+    font-size: 3vh;
+    text-align: center;
+    color: #fff; 
+}
+
+#colectivos h3 {
+    font-size: 2.5vh;
+    text-align: center;
+    color: #fff; 
+}
+
+#colectivos p {
     margin-bottom: 1%;
     font-size: 2.5vh;
 }
