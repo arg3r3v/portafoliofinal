@@ -218,9 +218,41 @@ nav ul li a:hover {
     color: inherit;
 }
 
-.section-img {
+.section-img-container {
+    width: 150px; /* Ajusta el tamaño que prefieras */
+    height: 150px; /* Mismo valor para hacerlo circular */
+    border-radius: 50%; /* Hace que el contenedor sea circular */
+    overflow: hidden; /* Asegura que la imagen no se salga del contenedor */
+    box-shadow: 10px 10px 30px rgba(0, 0, 0, 1); /* Sombra más pronunciada en el lado inferior derecho */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px; /* Centra el contenedor y agrega espacio inferior */
+}
+
+/* Imagen de la primera sección: rotación hacia la izquierda */
+#seccion1 .section-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
+    border-radius: 50%;
+    transform: rotate(-35deg); /* Rotación de 15 grados hacia la izquierda */
+}
+
+/* Imagen de la segunda sección: sin rotación (normal) */
+#seccion2 .section-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    transform: rotate(-45deg); /* No tiene rotación */
+}
+
+/* Imagen de la tercera sección: rotación hacia la derecha */
+#seccion3 .section-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    transform: rotate(-12deg); /* Rotación de 15 grados hacia la derecha */
 }
