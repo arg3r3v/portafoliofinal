@@ -42,6 +42,20 @@
 </a-entity>
     </a-scene>
 
+<script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const scene = document.querySelector('a-scene');
+        const camera = document.querySelector('[camera]');
+        
+        scene.addEventListener('loaded', () => {
+          if (camera.components['look-controls']) {
+            camera.components['look-controls'].pitchObject.rotation.x = 0;
+            camera.components['look-controls'].yawObject.rotation.y = 0;
+          }
+        });
+      });
+    </script>
+    
     <div id="poema">
         <h2>PORQUE AÚN SOY JOVEN</h2>
             <p class="poem">
