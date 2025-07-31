@@ -31,30 +31,17 @@
         </ul>
     </div>
 
-    <a-scene>
+    <a-scene embedded vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: true">
         <a-sky src="img/cuarto36013.png" rotation="0 0 0"></a-sky>
         <a-entity 
-  id="cam" 
+  id="cam"
   camera 
-  look-controls="pointerLockEnabled: false; touchEnabled: true" 
-  wasd-controls-enabled="false" 
-  position="0 0 0">
+  look-controls="touchEnabled: true; magicWindowTrackingEnabled: true"
+  wasd-controls-enabled="false"
+  position="0 1.6 0">
 </a-entity>
-    </a-scene>
 
-<script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const scene = document.querySelector('a-scene');
-        const camera = document.querySelector('[camera]');
-        
-        scene.addEventListener('loaded', () => {
-          if (camera.components['look-controls']) {
-            camera.components['look-controls'].pitchObject.rotation.x = 0;
-            camera.components['look-controls'].yawObject.rotation.y = 0;
-          }
-        });
-      });
-    </script>
+    </a-scene>
     
     <div id="poema">
         <h2>PORQUE AÚN SOY JOVEN</h2>
