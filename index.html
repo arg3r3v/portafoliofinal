@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerardo Arcos</title>
     <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-mobile-touch-look-controls@1.0.0/dist/aframe-mobile-touch-look-controls.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="img/logo.png" type="image/png">
 </head>
@@ -31,13 +32,13 @@
         </ul>
     </div>
 
-    <a-scene embedded vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: true">
+    <a-scene embedded vr-mode-ui="enabled: false">
         <a-sky src="img/cuarto36013.png" rotation="0 0 0"></a-sky>
         <a-entity 
   id="cam"
-  camera 
-  look-controls="touchEnabled: true; magicWindowTrackingEnabled: true"
-  wasd-controls-enabled="false"
+  camera
+  mobile-touch-look-controls
+  wasd-controls="enabled: false"
   position="0 1.6 0">
 </a-entity>
 
