@@ -1,4 +1,4 @@
-body {
+    body {
     margin: 0;
     padding: 0;
     font-family: 'Lora', serif;
@@ -211,7 +211,7 @@ nav ul li a:hover {
 }
 
 #seccion4 {
-    top: 600px;
+    top: 1500px;
     left: 700px;
 }
 
@@ -270,4 +270,5 @@ nav ul li a:hover {
     border-radius: 50%;
     transform: rotate(-12deg); /* Rotación de 15 grados hacia la derecha */
 }
+
 
