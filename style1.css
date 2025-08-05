@@ -268,5 +268,6 @@ nav ul li a:hover {
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
-    transform: rotate(-45deg); /* No tiene rotación */
+    transform: rotate(-12deg); /* Rotación de 15 grados hacia la derecha */
 }
+
