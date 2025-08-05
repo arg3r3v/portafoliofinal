@@ -262,3 +262,11 @@ nav ul li a:hover {
     transform: rotate(-12deg); /* Rotación de 15 grados hacia la derecha */
 }
 
+/* Imagen de la cuarta sección: sin rotación (normal) */
+#seccion4 .section-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    transform: rotate(-45deg); /* No tiene rotación */
+}
