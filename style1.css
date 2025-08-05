@@ -211,8 +211,8 @@ nav ul li a:hover {
 }
 
 #seccion4 {
-    top: 1500px;
-    left: 700px;
+    top: 600px;
+    left: 1800px;
 }
 
 .section-link {
@@ -270,5 +270,6 @@ nav ul li a:hover {
     border-radius: 50%;
     transform: rotate(-12deg); /* Rotación de 15 grados hacia la derecha */
 }
+
 
 
