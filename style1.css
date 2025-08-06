@@ -275,7 +275,7 @@ nav ul li a:hover {
     position: absolute;
     top: 1000px; /* Ajusta como desees */
     left: 1500px; /* Ajusta como desees */
-    width: 200px;
+    width: 250px;
     height: auto;
     z-index: 10;
     border-radius: 20px;
@@ -321,5 +321,6 @@ nav ul li a:hover {
     height: 100%;
     border: none;
 }
+
 
 
