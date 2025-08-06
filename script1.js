@@ -100,5 +100,3 @@ setInterval(() => {
         telefono.classList.remove('vibrando');
     }, 300); // Duración del efecto
 }, 10000); // Cada 10 segundos
-});
-
