@@ -307,7 +307,7 @@ nav ul li a:hover {
 
 .video-wrapper {
     position: absolute;
-    top: 8%;
+    top: 9%;
     left: 11%;
     width: 78%;
     height: 80%;
@@ -321,3 +321,4 @@ nav ul li a:hover {
     height: 100%;
     border: none;
 }
+
