@@ -278,7 +278,7 @@ nav ul li a:hover {
     width: 200px;
     height: auto;
     z-index: 10;
-    box-shadow: 0 0px 0px rgba(0, 0, 0, 1); /* sombra más pegada */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0,9); /* sombra más pegada */
     border-radius: 20px; /* bordes redondeados */
     transition: transform 0.3s ease;
     pointer-events: auto;
@@ -299,7 +299,7 @@ nav ul li a:hover {
 }
 
 .telefono-img {
-    width: 120%;
+    width: 110%;
     display: block;
     position: relative;
     z-index: 1;
@@ -321,4 +321,5 @@ nav ul li a:hover {
     height: 100%;
     border: none;
 }
+
 
