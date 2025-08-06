@@ -305,9 +305,6 @@ nav ul li a:hover {
     display: block;
     position: relative;
     z-index: 1;
-
-    /* Recorta borde sin deformar */
-    clip-path: inset(4% 4% 4% 4%);
 }
 
 .video-wrapper {
@@ -331,4 +328,5 @@ nav ul li a:hover {
     object-fit: cover;
     border: none;
 }
+
 
