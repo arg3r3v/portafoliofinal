@@ -283,8 +283,8 @@ nav ul li a:hover {
     pointer-events: auto;
     overflow: hidden;
 
-    /* Ajustar sombra más fuerte a la derecha */
-    box-shadow: 12px 6px 20px rgba(0, 0, 0, 0.7);
+    /* Sombra más realista hacia la derecha */
+    box-shadow: 15px 8px 25px rgba(0, 0, 0, 0.8);
 }
 
 .telefono-container.vibrando {
@@ -305,22 +305,30 @@ nav ul li a:hover {
     display: block;
     position: relative;
     z-index: 1;
-    clip-path: inset(5% 5% 5% 5%); /* Ajusta según el borde sobrante */
+
+    /* Recorta borde sin deformar */
+    clip-path: inset(4% 4% 4% 4%);
 }
 
 .video-wrapper {
     position: absolute;
-    top: 17%;
-    left: 11%;
-    width: 95%;
-    height: 66%;
+    top: 12%;  /* Ajusta para que coincida con la parte visible */
+    left: 8%;  /* Ajusta para que quede centrado */
+    width: 84%; /* Más preciso que 95% */
+    height: 76%; /* Ajusta altura para cubrir pantalla */
     z-index: 2;
     overflow: hidden;
-    pointer-events: none; /* Para evitar que el usuario haga clic */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: black; /* Para tapar bordes */
+    border-radius: 12px; /* Igual que pantalla del teléfono */
 }
 
 .video-wrapper iframe {
     width: 100%;
     height: 100%;
+    object-fit: cover;
     border: none;
 }
+
