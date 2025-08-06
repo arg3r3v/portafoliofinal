@@ -282,7 +282,7 @@ nav ul li a:hover {
     transition: transform 0.3s ease;
     pointer-events: auto;
     overflow: hidden;
-    box-shadow: 15px 8px 25px rgba(0, 0, 0, 0.8);
+    filter: drop-shadow(15px 8px 25px rgba(0, 0, 0, 0.8));
 }
 
 .telefono-container.vibrando {
@@ -321,4 +321,5 @@ nav ul li a:hover {
     height: 100%;
     border: none;
 }
+
 
