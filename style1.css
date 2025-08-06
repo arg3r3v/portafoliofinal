@@ -309,7 +309,7 @@ nav ul li a:hover {
     position: absolute;
     top: 17%;
     left: 11%;
-    width: 78%;
+    width: 95%;
     height: 66%;
     z-index: 2;
     overflow: hidden;
@@ -321,8 +321,3 @@ nav ul li a:hover {
     height: 100%;
     border: none;
 }
-
-
-
-
-
