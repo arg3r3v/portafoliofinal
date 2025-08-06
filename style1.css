@@ -273,8 +273,8 @@ nav ul li a:hover {
 
 .telefono-container {
     position: absolute;
-    top: 2000px; /* Ajusta como desees */
-    left: 2500px; /* Ajusta como desees */
+    top: 1000px; /* Ajusta como desees */
+    left: 1500px; /* Ajusta como desees */
     width: 200px;
     height: auto;
     z-index: 10;
@@ -319,5 +319,6 @@ nav ul li a:hover {
     height: 100%;
     border: none;
 }
+
 
 
