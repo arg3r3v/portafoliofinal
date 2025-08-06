@@ -299,7 +299,7 @@ nav ul li a:hover {
 }
 
 .telefono-img {
-    width: 110%;
+    width: 100%;
     display: block;
     position: relative;
     z-index: 1;
@@ -321,5 +321,6 @@ nav ul li a:hover {
     height: 100%;
     border: none;
 }
+
 
 
