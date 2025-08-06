@@ -92,12 +92,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Vibración del teléfono cada 10 segundos
+// Vibración cada 10 segundos
+setInterval(() => {
     const telefono = document.getElementById('telefono');
-    setInterval(() => {
-        telefono.classList.add('vibrando');
-        setTimeout(() => {
-            telefono.classList.remove('vibrando');
-        }, 300);
-    }, 10000);
+    telefono.classList.add('vibrando');
+    setTimeout(() => {
+        telefono.classList.remove('vibrando');
+    }, 300); // Duración del efecto
+}, 10000); // Cada 10 segundos
 });
+
