@@ -310,7 +310,7 @@ nav ul li a:hover {
     top: 9%;
     left: 11%;
     width: 78%;
-    height: 81%;
+    height: 82%;
     z-index: 2;
     overflow: hidden;
     pointer-events: none; /* Para evitar que el usuario haga clic */
