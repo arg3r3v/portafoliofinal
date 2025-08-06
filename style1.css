@@ -307,10 +307,10 @@ nav ul li a:hover {
 
 .video-wrapper {
     position: absolute;
-    top: 12%;
+    top: 8%;
     left: 11%;
     width: 78%;
-    height: 78%;
+    height: 80%;
     z-index: 2;
     overflow: hidden;
     pointer-events: none; /* Para evitar que el usuario haga clic */
@@ -321,8 +321,3 @@ nav ul li a:hover {
     height: 100%;
     border: none;
 }
-
-
-
-
-
