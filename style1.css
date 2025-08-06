@@ -278,9 +278,11 @@ nav ul li a:hover {
     width: 200px;
     height: auto;
     z-index: 10;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* sombra más pegada */
+    border-radius: 20px; /* bordes redondeados */
     transition: transform 0.3s ease;
     pointer-events: auto;
+    overflow: hidden; /* para que respete el borde redondeado */
 }
 
 .telefono-container.vibrando {
@@ -319,6 +321,7 @@ nav ul li a:hover {
     height: 100%;
     border: none;
 }
+
 
 
 
