@@ -272,12 +272,11 @@ nav ul li a:hover {
 }
 
 .telefono-container {
-    position: fixed;
+    position: absolute;
     bottom: 5%;
     right: 5%;
     width: 200px;
     height: auto;
-    z-index: 1000;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
     transition: transform 0.3s ease;
     pointer-events: auto;
@@ -319,3 +318,4 @@ nav ul li a:hover {
     height: 100%;
     border: none;
 }
+
