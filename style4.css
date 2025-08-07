@@ -191,10 +191,12 @@ nav ul li a:hover {
     left: 15%;
     width: 70%;
     height: 70%;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 3%; /* Separación entre obras */
+    gap: 3%;
+    overflow-y: auto;
+    padding: 2%;
+    box-sizing: border-box;
   }
 
   .obra {
@@ -228,6 +230,3 @@ nav ul li a:hover {
       max-width: 100%;
     }
   }
-
-
-
