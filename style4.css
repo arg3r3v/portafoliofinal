@@ -187,10 +187,10 @@ nav ul li a:hover {
 
   .contenedor-principal {
     position: absolute;
-    top: 20%;
-    left: 20%;
-    width: 80%;
-    height: 80%;
+    top: 15%;
+    left: 15%;
+    width: 70%;
+    height: 70%;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -228,5 +228,6 @@ nav ul li a:hover {
       max-width: 100%;
     }
   }
+
 
 
