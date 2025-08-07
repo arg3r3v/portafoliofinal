@@ -185,69 +185,71 @@ nav ul li a:hover {
 
 }
 
-.galeria {
+nav ul {
+  list-style: none;
   display: flex;
-  flex-direction: column;
-  gap: 4%;
+  justify-content: center;
+  gap: 2em;
 }
 
-.obra {
+nav a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+
+main {
+  margin-top: 100px; /* espacio para el header */
+  display: flex;
+  justify-content: center;
+  padding: 2%;
+}
+
+.contenido {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin-bottom: 5%;
-  flex-wrap: wrap;
+  max-width: 1000px;
+  width: 100%;
+  gap: 5%;
 }
 
-.obra-imagen img {
+.imagen img {
   width: 100%;
   max-width: 400px;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.obra-imagen {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  margin: 1rem;
+.texto {
+  max-width: 400px;
+  text-align: center;
 }
 
-.obra-texto {
-  flex: 1;
-  max-width: 500px;
-  padding: 1rem;
-  text-align: left;
+.texto h1 {
+  font-size: 2em;
+  margin-bottom: 0.5em;
 }
 
-.obra-texto h2 {
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
+.texto p {
+  font-size: 1.1em;
+  line-height: 1.6;
 }
 
-.obra-texto p {
-  font-size: 1rem;
-  line-height: 1.5;
-}
-
-/* Responsive para móviles */
+/* RESPONSIVE DESIGN */
 @media (max-width: 768px) {
-  .obra {
+  .contenido {
     flex-direction: column;
     text-align: center;
   }
 
-  .obra-texto {
-    padding: 0;
-    text-align: center;
+  .imagen,
+  .texto {
+    max-width: 90%;
   }
 
-  .obra-texto h2 {
-    font-size: 1.5rem;
-  }
-
-  .obra-texto p {
-    font-size: 0.95rem;
+  .texto {
+    margin-top: 2em;
   }
 }
