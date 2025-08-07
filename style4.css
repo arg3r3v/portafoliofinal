@@ -185,58 +185,51 @@ nav ul li a:hover {
 
 }
 
-main {
-  margin-top: 100px; /* espacio para el header */
+.obra {
   display: flex;
-  justify-content: center;
-  padding: 2%;
-}
-
-.contenido {
-  display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
-  max-width: 1000px;
-  width: 100%;
-  gap: 5%;
+  margin-bottom: 40px;
+  gap: 40px;
+  flex-wrap: wrap;
 }
 
-.imagen img {
-  width: 100%;
-  max-width: 400px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.texto {
-  max-width: 400px;
+.obra-imagen {
+  flex: 1;
   text-align: center;
 }
 
-.texto h1 {
-  font-size: 2em;
-  margin-bottom: 0.5em;
+.obra-imagen img {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
-.texto p {
-  font-size: 1.1em;
+.obra-texto {
+  flex: 1;
+  max-width: 500px;
+  text-align: center;
+}
+
+.obra-texto h2 {
+  margin-bottom: 10px;
+}
+
+.obra-texto p {
   line-height: 1.6;
+  font-size: 1rem;
 }
 
-/* RESPONSIVE DESIGN */
-@media (max-width: 768px) {
-  .contenido {
+/* Diseño responsivo para móviles */
+@media screen and (max-width: 768px) {
+  .obra {
     flex-direction: column;
     text-align: center;
   }
 
-  .imagen,
-  .texto {
-    max-width: 90%;
-  }
-
-  .texto {
-    margin-top: 2em;
+  .obra-texto {
+    max-width: 100%;
+    margin-top: 20px;
   }
 }
