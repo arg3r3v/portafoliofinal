@@ -185,71 +185,68 @@ nav ul li a:hover {
 
 }
 
-nav ul {
-  list-style: none;
-  display: flex;
-  justify-content: center;
-  gap: 2em;
-}
-
-nav a {
-  text-decoration: none;
-  color: #333;
-  font-weight: bold;
-}
-
 main {
-  margin-top: 100px; /* espacio para el header */
-  display: flex;
-  justify-content: center;
-  padding: 2%;
-}
-
-.contenido {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  max-width: 1000px;
-  width: 100%;
-  gap: 5%;
-}
-
-.imagen img {
-  width: 100%;
-  max-width: 400px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.texto {
-  max-width: 400px;
-  text-align: center;
-}
-
-.texto h1 {
-  font-size: 2em;
-  margin-bottom: 0.5em;
-}
-
-.texto p {
-  font-size: 1.1em;
-  line-height: 1.6;
-}
-
-/* RESPONSIVE DESIGN */
-@media (max-width: 768px) {
-  .contenido {
+    margin-top: 100px; /* espacio para el header */
+    display: flex;
     flex-direction: column;
-    text-align: center;
-  }
+    align-items: center;
+    padding: 2%;
+}
 
-  .imagen,
-  .texto {
-    max-width: 90%;
-  }
+.obra {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 20px;
+    padding: 2%;
+    margin: 2% 0;
+    max-width: 1100px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 5%;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+}
 
-  .texto {
-    margin-top: 2em;
-  }
+.obra-imagen img {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.obra-texto {
+    max-width: 500px;
+    text-align: left;
+}
+
+.obra-texto h2 {
+    font-size: 2em;
+    margin-bottom: 0.5em;
+}
+
+.obra-texto p {
+    font-size: 1.1em;
+    line-height: 1.6;
+}
+
+/* RESPONSIVO */
+@media (max-width: 768px) {
+    .obra {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .obra-texto {
+        text-align: center;
+        margin-top: 1.5em;
+    }
+
+    .obra-texto h2 {
+        font-size: 1.5em;
+    }
+
+    .obra-texto p {
+        font-size: 1em;
+    }
 }
