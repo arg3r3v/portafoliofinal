@@ -204,7 +204,6 @@ nav ul li a:hover {
     align-items: center;
     padding: 2%;
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.1); /* opcional */
   }
 
   .obra img {
@@ -229,3 +228,4 @@ nav ul li a:hover {
       max-width: 100%;
     }
   }
+
