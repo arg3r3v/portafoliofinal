@@ -6,7 +6,7 @@ body {
     text-align: center;
     overflow-x: hidden;
     font-size: 3vh;
-    background: url('img/paredcuarto.png') no-repeat center center fixed;
+    background: url('img/computadora.png') no-repeat center center fixed;
     background-size: cover;
 }
 
@@ -221,4 +221,5 @@ nav ul li a:hover {
       max-width: 100%;
     }
   }
+
 
