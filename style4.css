@@ -185,67 +185,40 @@ nav ul li a:hover {
 
 }
 
-#image-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 20px; 
-    padding: 20px;
-    margin-top: 100px; 
-    font-size: 1vh;
+.gallery-container {
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 2rem;
+  min-height: calc(100vh - 70px);
 }
 
-#image-grid a {
-    display: block;
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
 }
 
-#image-grid img {
-    width: 35%;
-    height: auto;
-    border-radius: 8px;
-    transition: transform 0.3s ease;
+.card {
+  background: #222;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-#image-grid img:hover {
-    transform: scale(1.05); 
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.6);
 }
 
-@media (max-width: 767px) {
-    #image-grid {
-        grid-template-columns: 1fr;
-    }
+.card img {
+  width: 100%;
+  display: block;
 }
 
-#image-grid2 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 20px;
-    padding: 20px;
-    margin-top: 15%;
-    font-size: 2.5vh;
-}
-
-#image-grid2 a {
-    display: block;
-}
-
-#image-grid2 img {
-    width: 50%;
-    height: auto;
-    border-radius: 8px;
-    transition: transform 0.3s ease;
-}
-
-#image-grid2 img:hover {
-    transform: scale(2);
-}
-
-@media (max-width: 767px) {
-    #image-grid2 {
-        grid-template-columns: 1fr;
-        margin-top: 30%; 
-    }
-    #image-grid2 img{
-        width: 50%;
-        height: auto;
-    }
+.card .caption {
+  display: block;
+  padding: 0.75rem;
+  text-align: center;
+  font-size: 1rem;
+  background: rgba(0,0,0,0.7);
 }
