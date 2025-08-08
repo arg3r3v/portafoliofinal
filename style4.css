@@ -134,6 +134,11 @@ nav ul li a:hover {
 }
 
 @media (min-width: 600px) {
+    body {
+        background: url('img/telefono1.png') no-repeat center center fixed;
+        background-size: cover;
+    }
+    
     nav {
         display: block;
     }
@@ -227,4 +232,5 @@ nav ul li a:hover {
         height: 75%;
     }
   }
+
 
