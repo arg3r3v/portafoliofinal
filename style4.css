@@ -162,7 +162,7 @@ nav ul li a:hover {
   }
 
   .contenedor-principal::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.4); /* Negro casi transparente */
+    background-color: rgba(156, 156, 156, 0.5); /* Negro casi transparente */
     border-radius: 3px; /* Bordes redondeados */
   }
 
@@ -170,7 +170,6 @@ nav ul li a:hover {
     background-color: rgba(0, 0, 0, 0.6); /* Más visible al pasar el mouse */
   }
 
-  /* Firefox */
   .contenedor-principal {
     scrollbar-width: thin; /* Barra fina */
     scrollbar-color: rgba(0, 0, 0, 0.4) transparent; /* Color barra + fondo */
@@ -250,6 +249,7 @@ nav ul li a:hover {
         height: 75%;
     }
   }
+
 
 
 
