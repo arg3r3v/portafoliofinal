@@ -180,8 +180,8 @@ nav ul li a:hover {
     position: absolute;
     top: 17%;
     left: 15%;
-    width: 70%;
-    height: 50%;
+    width: 50%;
+    height: 65%;
     display: flex;
     flex-direction: column;
     gap: 3%;
@@ -221,11 +221,3 @@ nav ul li a:hover {
       max-width: 100%;
     }
   }
-
-
-
-
-
-
-
-
