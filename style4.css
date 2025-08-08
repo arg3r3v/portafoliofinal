@@ -220,6 +220,13 @@ nav ul li a:hover {
     .obra img {
       max-width: 100%;
     }
+    .contenedor-principal {
+        top: 25%;
+        left: 25%;
+        width: 50%;
+        height: 50%;
+    }
   }
+
 
 
