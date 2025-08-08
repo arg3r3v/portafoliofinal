@@ -190,7 +190,7 @@ nav ul li a:hover {
 
   .contenedor-principal {
     position: absolute;
-    top: 25%;
+    button: 25%;
     left: 25%;
     width: 726px;
     height: 480px;
@@ -239,6 +239,7 @@ nav ul li a:hover {
         height: 75%;
     }
   }
+
 
 
 
