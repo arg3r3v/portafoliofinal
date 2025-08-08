@@ -222,11 +222,12 @@ nav ul li a:hover {
     }
     .contenedor-principal {
         top: 25%;
-        left: 15%;
-        width: 50%;
-        height: 70%;
+        left: 0;
+        width: 100%;
+        height: auto;
     }
   }
+
 
 
 
