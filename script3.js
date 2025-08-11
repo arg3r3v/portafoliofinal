@@ -18,42 +18,41 @@ document.addEventListener('DOMContentLoaded', () => {
 (function () {
   'use strict';
 
-  const STORAGE_PREFIX = 'monitorRect_v2::';
-  const MIN_VISIBLE_RATIO = 0.6; // porcentaje de área visible mínimo para considerar buena la colocación (0..1)
-  const MIN_PX_WIDTH = 100; // tamaño mínimo razonable para el contenedor
-  const MIN_PX_HEIGHT = 80;
+  const cont = document.querySelector('.contenedor-principal');
+  if (!cont) {
+    console.info('Posicionador: .contenedor-principal no existe. Abortando.');
+    return;
+  }
+
+  // forzar control por el script
+  cont.style.position = 'absolute';
+  cont.style.boxSizing = 'border-box';
+  cont.style.transition = 'opacity 140ms linear';
+  cont.style.opacity = '0';
+
+  // --- constantes (ajustables) ---
+  const DESKTOP_MONITOR_RECT = { left: 540, top: 210, width: 968, height: 640 }; // en px sobre imagen 2048x1152
+  const MIN_PX_WIDTH = 80;
+  const MIN_PX_HEIGHT = 60;
   const RESIZE_DEBOUNCE_MS = 80;
 
+  // --- helpers ---
   function extractBgUrl(str) {
     if (!str) return null;
     const m = /url\(["']?(.*?)["']?\)/.exec(str);
     return m ? m[1] : null;
   }
-
   function toAbsoluteUrl(url) {
-    try {
-      return new URL(url, location.href).href;
-    } catch (e) {
-      return url;
-    }
+    try { return new URL(url, location.href).href; } catch (e) { return url; }
   }
 
-  function storageKey(imgUrl, bucket, dpr) {
-    const safe = encodeURIComponent(imgUrl);
-    return `${STORAGE_PREFIX}${safe}::${bucket}::dpr${Math.round(dpr || 1)}`;
-  }
-
-  function saveMonitorRect(key, rect) {
-    localStorage.setItem(key, JSON.stringify(rect));
-  }
-
-  function readMonitorRect(key) {
-    const s = localStorage.getItem(key);
-    return s ? JSON.parse(s) : null;
-  }
-
-  function clearMonitorRectForKey(key) {
-    localStorage.removeItem(key);
+  function loadImage(url) {
+    return new Promise((res, rej) => {
+      const img = new Image();
+      img.onload = () => res({ width: img.naturalWidth || img.width, height: img.naturalHeight || img.height });
+      img.onerror = rej;
+      img.src = url;
+    });
   }
 
   function coverScaleAndOffsets(vw, vh, imgW, imgH) {
@@ -65,269 +64,127 @@ document.addEventListener('DOMContentLoaded', () => {
     return { scale, offsetX, offsetY, scaledW, scaledH };
   }
 
-  function viewportRectToImageRect(rect, vw, vh, imgW, imgH) {
-    const { scale, offsetX, offsetY } = coverScaleAndOffsets(vw, vh, imgW, imgH);
-    return {
-      left: (rect.left + offsetX) / scale,
-      top: (rect.top + offsetY) / scale,
-      width: rect.width / scale,
-      height: rect.height / scale
-    };
-  }
-
   function imageRectToViewportRect(monitorRect, vw, vh, imgW, imgH) {
     const { scale, offsetX, offsetY } = coverScaleAndOffsets(vw, vh, imgW, imgH);
-    return {
-      leftPx: monitorRect.left * scale - offsetX,
-      topPx: monitorRect.top * scale - offsetY,
-      widthPx: monitorRect.width * scale,
-      heightPx: monitorRect.height * scale
-    };
+    const leftPx = monitorRect.left * scale - offsetX;
+    const topPx = monitorRect.top * scale - offsetY;
+    const widthPx = monitorRect.width * scale;
+    const heightPx = monitorRect.height * scale;
+    return { leftPx, topPx, widthPx, heightPx };
   }
 
-  function rectArea(r) {
-    return Math.max(0, r.width * r.height);
+  function clampRectToViewport(rect, vw, vh) {
+    // Asegura que el rect tenga tamaño mínimo y quede dentro del viewport en lo posible
+    let left = Math.round(rect.leftPx);
+    let top = Math.round(rect.topPx);
+    let width = Math.max(Math.round(rect.widthPx), MIN_PX_WIDTH);
+    let height = Math.max(Math.round(rect.heightPx), MIN_PX_HEIGHT);
+
+    // si se sale a la derecha/abajo, tratar de ajustarlo
+    if (left + width > vw) left = Math.max(0, vw - width);
+    if (top + height > vh) top = Math.max(0, vh - height);
+
+    // si queda con coordenadas negativas, llevar a 0
+    left = Math.max(0, left);
+    top = Math.max(0, top);
+
+    return { left, top, width, height };
   }
 
-  function intersectionArea(rectA, rectB) {
-    const x1 = Math.max(rectA.left, rectB.left);
-    const y1 = Math.max(rectA.top, rectB.top);
-    const x2 = Math.min(rectA.left + rectA.width, rectB.left + rectB.width);
-    const y2 = Math.min(rectA.top + rectA.height, rectB.top + rectB.height);
-    if (x2 <= x1 || y2 <= y1) return 0;
-    return (x2 - x1) * (y2 - y1);
-  }
-
-  function isPlacementGood(vpRect) {
-    // Si rect dimensions muy pequeñas => malo
-    if (vpRect.widthPx < MIN_PX_WIDTH || vpRect.heightPx < MIN_PX_HEIGHT) return false;
-
-    // calcular área visible dentro del viewport
-    const r = { left: vpRect.leftPx, top: vpRect.topPx, width: vpRect.widthPx, height: vpRect.heightPx };
-    const vp = { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
-    const inter = intersectionArea(r, vp);
-    const area = Math.max(1, r.width * r.height);
-    const ratio = inter / area;
-    return ratio >= MIN_VISIBLE_RATIO;
-  }
-
-  function applyViewportRect(cont, vpRect) {
-    const maxW = Math.max(Math.round(vpRect.widthPx), MIN_PX_WIDTH);
-    const maxH = Math.max(Math.round(vpRect.heightPx), MIN_PX_HEIGHT);
-    cont.style.left = Math.round(vpRect.leftPx) + 'px';
-    cont.style.top = Math.round(vpRect.topPx) + 'px';
-    cont.style.width = maxW + 'px';
-    cont.style.height = maxH + 'px';
+  function applyRect(left, top, width, height) {
+    cont.style.left = left + 'px';
+    cont.style.top = top + 'px';
+    cont.style.width = width + 'px';
+    cont.style.height = height + 'px';
     cont.style.opacity = '1';
   }
 
-  function initPositioning() {
-    const cont = document.querySelector('.contenedor-principal');
-    if (!cont) {
-      console.info('Posicionador: .contenedor-principal no existe. Abortando.');
-      return;
-    }
-
-    cont.style.position = 'absolute';
-    cont.style.boxSizing = 'border-box';
-    cont.style.transition = 'opacity 140ms linear';
-    cont.style.opacity = '0';
-
-    let currentBg = null;
-    let currentKey = null;
-    let currentImgW = 0;
-    let currentImgH = 0;
-    let lastLoadUrl = null;
-
-    async function loadBgImage(imgUrl) {
-      // cache fast-path
-      if (lastLoadUrl === imgUrl && currentImgW && currentImgH) return { width: currentImgW, height: currentImgH };
-
-      return new Promise((res, rej) => {
-        const img = new Image();
-        img.onload = function () {
-          lastLoadUrl = imgUrl;
-          currentImgW = img.naturalWidth || img.width;
-          currentImgH = img.naturalHeight || img.height;
-          res({ width: currentImgW, height: currentImgH });
-        };
-        img.onerror = function (e) { rej(e); };
-        img.src = imgUrl;
-      });
-    }
-
-    function getBucket() {
-      const w = window.innerWidth;
-      return w <= 768 ? 'mobile' : 'desktop';
-    }
-
-    async function updateForCurrentBg() {
-      // extraer fondo actual
+  async function updatePosition() {
+    try {
       const bodyStyle = getComputedStyle(document.body).backgroundImage;
       const raw = extractBgUrl(bodyStyle);
       if (!raw) {
-        console.warn('Posicionador: body no tiene background-image detectado.');
-        cont.style.opacity = '1';
+        console.warn('Posicionador: No se detectó background-image en body.');
+        // fallback centrado
+        const vw = window.innerWidth, vh = window.innerHeight;
+        applyRect(Math.max(0, Math.round((vw - 600) / 2)), Math.max(0, Math.round((vh - 400) / 2)), 600, 400);
         return;
       }
-      const abs = toAbsoluteUrl(raw);
-      const bucket = getBucket();
-      const dpr = window.devicePixelRatio || 1;
-      const key = storageKey(abs, bucket, dpr);
+      const bgAbs = toAbsoluteUrl(raw);
+      const vw = window.innerWidth, vh = window.innerHeight;
 
-      currentBg = abs;
-      currentKey = key;
+      // ruta simple para móvil: si el viewport es pequeño o si la imagen es telefono1
+      const isMobileViewport = vw <= 768;
+      const isTelefonoImg = /telefono1/i.test(bgAbs);
+      const isComputadoraImg = /computadora12/i.test(bgAbs);
 
-      // cargar imagen
-      let imgInfo;
-      try {
-        imgInfo = await loadBgImage(abs);
-      } catch (e) {
-        console.error('Posicionador: no se pudo cargar imagen de fondo', abs, e);
-        cont.style.opacity = '1';
-        return;
-      }
-
-      const imgW = imgInfo.width;
-      const imgH = imgInfo.height;
-
-      // intentar leer calibración
-      let monitorRect = readMonitorRect(key);
-
-      if (monitorRect) {
-        // convertir a viewport y validar
-        const vpRect = imageRectToViewportRect(monitorRect, window.innerWidth, window.innerHeight, imgW, imgH);
-        if (isPlacementGood(vpRect)) {
-          console.info('Posicionador: usando calibración guardada para', abs, bucket);
-          applyViewportRect(cont, vpRect);
-          return;
-        } else {
-          console.warn('Posicionador: calibración encontrada pero resulta inválida para este viewport. Intentando recalibrar automático si es posible.');
-          // intentar recalibrar automáticamente si el contenedor actual es visible y razonable
-          const currentRect = cont.getBoundingClientRect();
-          const visibleArea = intersectionArea(currentRect, { left:0, top:0, width: window.innerWidth, height: window.innerHeight });
-          const visRatio = visibleArea / Math.max(1, rectArea(currentRect));
-          if (visRatio > 0.3 && currentRect.width > 30 && currentRect.height > 30) {
-            // usamos el rect actual como calibración y la guardamos
-            const newMon = viewportRectToImageRect(currentRect, window.innerWidth, window.innerHeight, imgW, imgH);
-            newMon.left = Math.max(0, Math.round(newMon.left));
-            newMon.top = Math.max(0, Math.round(newMon.top));
-            newMon.width = Math.max(10, Math.round(newMon.width));
-            newMon.height = Math.max(10, Math.round(newMon.height));
-            saveMonitorRect(key, newMon);
-            console.info('Posicionador: recalibración automática guardada para', abs, key, newMon);
-            const vpRect2 = imageRectToViewportRect(newMon, window.innerWidth, window.innerHeight, imgW, imgH);
-            applyViewportRect(cont, vpRect2);
-            return;
-          } else {
-            // fallback: centramos el contenedor en la parte visible de la imagen (no guardamos)
-            console.warn('Posicionador: fallback centrar (no guardado).');
-            const centerLeft = Math.max(20, Math.round((window.innerWidth - 600) / 2)); // heurística
-            const centerTop = Math.max(60, Math.round((window.innerHeight - 400) / 2));
-            cont.style.left = centerLeft + 'px';
-            cont.style.top = centerTop + 'px';
-            cont.style.width = '600px';
-            cont.style.height = '400px';
-            cont.style.opacity = '1';
-            return;
-          }
-        }
-      } else {
-        // No hay calibración previa => calibrar usando el rect actual y guardar
-        const rect = cont.getBoundingClientRect();
-        // si el contenedor está fuera de viewport o invisible, no guardamos: mostramos fallback
-        const visibleArea = intersectionArea(rect, { left:0, top:0, width: window.innerWidth, height: window.innerHeight });
-        const visRatio = visibleArea / Math.max(1, rectArea(rect));
-        if (visRatio < 0.1 || rect.width < 30 || rect.height < 30) {
-          console.warn('Posicionador: no se encontró calibración y contenedor actual no es visible/útil. Usando fallback centrar (no guardado).');
-          const centerLeft = Math.max(20, Math.round((window.innerWidth - 600) / 2));
-          const centerTop = Math.max(60, Math.round((window.innerHeight - 400) / 2));
-          cont.style.left = centerLeft + 'px';
-          cont.style.top = centerTop + 'px';
-          cont.style.width = '600px';
-          cont.style.height = '400px';
-          cont.style.opacity = '1';
-          return;
-        }
-        const monitor = viewportRectToImageRect(rect, window.innerWidth, window.innerHeight, imgW, imgH);
-        monitor.left = Math.max(0, Math.round(monitor.left));
-        monitor.top = Math.max(0, Math.round(monitor.top));
-        monitor.width = Math.max(10, Math.round(monitor.width));
-        monitor.height = Math.max(10, Math.round(monitor.height));
-        saveMonitorRect(key, monitor);
-        console.info('Posicionador: calibración guardada para', abs, key, monitor);
-        const vpRect = imageRectToViewportRect(monitor, window.innerWidth, window.innerHeight, imgW, imgH);
-        applyViewportRect(cont, vpRect);
-        return;
-      }
-    } // end updateForCurrentBg
-
-    // Debounced resize handler that also detects background-image change (media queries)
-    let resizeTimer = null;
-    async function onResize() {
-      if (resizeTimer) clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(async () => {
+      if (isComputadoraImg && !isMobileViewport) {
+        // desktop: usar rect medido y la imagen real para mapear
+        let imgInfo;
         try {
-          await updateForCurrentBg();
+          imgInfo = await loadImage(bgAbs);
         } catch (e) {
-          console.error('Posicionador: error en resize handler', e);
-          cont.style.opacity = '1';
-        } finally {
-          resizeTimer = null;
+          console.warn('Posicionador: no se pudo cargar imagen de fondo (desktop). Usando fallback centrado.', e);
+          const leftF = Math.max(0, Math.round((vw - 600) / 2));
+          const topF = Math.max(0, Math.round((vh - 400) / 2));
+          applyRect(leftF, topF, 600, 400);
+          return;
         }
-      }, RESIZE_DEBOUNCE_MS);
-    }
-
-    // Public functions for manual control
-    window.clearMonitorCalibration = function (imgUrl) {
-      try {
-        const bodyStyle = getComputedStyle(document.body).backgroundImage;
-        const raw = extractBgUrl(bodyStyle);
-        const abs = imgUrl ? toAbsoluteUrl(imgUrl) : toAbsoluteUrl(raw || '');
-        if (!abs) { console.warn('clearMonitorCalibration: no se pudo resolver imagen'); return; }
-        const bucket = getBucket();
-        const key = storageKey(abs, bucket, window.devicePixelRatio || 1);
-        clearMonitorRectForKey(key);
-        console.info('clearMonitorCalibration: borrada calibración para key', key);
-      } catch (e) { console.error(e); }
-    };
-
-    window.recalibrateMonitor = async function (forceImgUrl) {
-      try {
-        const bodyStyle = getComputedStyle(document.body).backgroundImage;
-        const raw = extractBgUrl(bodyStyle);
-        const abs = forceImgUrl ? toAbsoluteUrl(forceImgUrl) : toAbsoluteUrl(raw || '');
-        if (!abs) { console.warn('recalibrateMonitor: no se pudo resolver imagen'); return; }
-        const bucket = getBucket();
-        const key = storageKey(abs, bucket, window.devicePixelRatio || 1);
-        const imgInfo = await loadBgImage(abs);
-        const rect = cont.getBoundingClientRect();
-        const monitor = viewportRectToImageRect(rect, window.innerWidth, window.innerHeight, imgInfo.width, imgInfo.height);
-        monitor.left = Math.max(0, Math.round(monitor.left));
-        monitor.top = Math.max(0, Math.round(monitor.top));
-        monitor.width = Math.max(10, Math.round(monitor.width));
-        monitor.height = Math.max(10, Math.round(monitor.height));
-        saveMonitorRect(key, monitor);
-        console.info('recalibrateMonitor: recalibración guardada para', key, monitor);
-        // aplicar inmediatamente
-        const vpRect = imageRectToViewportRect(monitor, window.innerWidth, window.innerHeight, imgInfo.width, imgInfo.height);
-        applyViewportRect(cont, vpRect);
-      } catch (e) {
-        console.error('recalibrateMonitor error', e);
+        const vpRect = imageRectToViewportRect(DESKTOP_MONITOR_RECT, vw, vh, imgInfo.width, imgInfo.height);
+        const clamped = clampRectToViewport(vpRect, vw, vh);
+        applyRect(clamped.left, clamped.top, clamped.width, clamped.height);
+        return;
       }
-    };
 
-    // Init
-    updateForCurrentBg();
+      // mobile (telefono1 OR small viewport) -> aplicar porcentajes (coincide con tu media query)
+      if (isTelefonoImg || isMobileViewport) {
+        const left = Math.round(vw * 0.125);    // 12.5%
+        const top = Math.round(vh * 0.125);     // 12.5%
+        const width = Math.round(vw * 0.75);    // 75%
+        const height = Math.round(vh * 0.75);   // 75%
+        // clamp por si acaso
+        const clampedLeft = Math.max(0, Math.min(left, vw - MIN_PX_WIDTH));
+        const clampedTop = Math.max(0, Math.min(top, vh - MIN_PX_HEIGHT));
+        const clampedWidth = Math.max(MIN_PX_WIDTH, Math.min(width, vw));
+        const clampedHeight = Math.max(MIN_PX_HEIGHT, Math.min(height, vh));
+        applyRect(clampedLeft, clampedTop, clampedWidth, clampedHeight);
+        return;
+      }
 
-    window.addEventListener('resize', onResize);
-    window.addEventListener('orientationchange', () => setTimeout(onResize, 120));
-  } // end initPositioning
-
-  // Run when DOM ready (supports defer)
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    initPositioning();
-  } else {
-    document.addEventListener('DOMContentLoaded', initPositioning);
+      // fallback genérico: si no coincide con patrones, intentar usar desktop rect mapping (por compatibilidad)
+      try {
+        const imgInfo = await loadImage(bgAbs);
+        const vpRect = imageRectToViewportRect(DESKTOP_MONITOR_RECT, vw, vh, imgInfo.width, imgInfo.height);
+        const clamped = clampRectToViewport(vpRect, vw, vh);
+        applyRect(clamped.left, clamped.top, clamped.width, clamped.height);
+      } catch (e) {
+        // ultimate fallback
+        const leftF = Math.max(0, Math.round((vw - 600) / 2));
+        const topF = Math.max(0, Math.round((vh - 400) / 2));
+        applyRect(leftF, topF, 600, 400);
+      }
+    } catch (e) {
+      console.error('Posicionador: error inesperado', e);
+      cont.style.opacity = '1';
+    }
   }
+
+  // Debounce resize
+  let resizeTimer = null;
+  function scheduleUpdate() {
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { updatePosition(); resizeTimer = null; }, RESIZE_DEBOUNCE_MS);
+  }
+
+  window.addEventListener('load', updatePosition);
+  window.addEventListener('resize', scheduleUpdate);
+  window.addEventListener('orientationchange', () => setTimeout(updatePosition, 120));
+
+  // Ejecutar inmediatamente si DOM ya está listo
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    updatePosition();
+  } else {
+    document.addEventListener('DOMContentLoaded', updatePosition);
+  }
+
 })();
