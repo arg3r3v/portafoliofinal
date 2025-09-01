@@ -1,65 +1,67 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerardo Arcos</title>
-    <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="img/logo.png" type="image/png">
-</head>
-<body>
-    <header>
-        <h1>GERARDO ARCOS</h1>
-        <nav>
-            <ul id="nav-list">
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="biografia.html">Sobre Mí</a></li>
-                <li><a href="proyectos.html">Proyectos</a></li>
-                <li><a href="https://arg3r3v.github.io/axolotl/juego.html">Videojuegos</a></li>
-            </ul>
-        </nav>
-        <button id="menu-button"><img src="img/menu.png" alt="Menú"></button>
-    </header>
-    <div id="overlay"></div>
-    <div id="fullscreen-menu">
-        <ul>
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="biografia.html">Sobre Mí</a></li>
-                <li><a href="proyectos.html">Proyectos</a></li>
-                <li><a href="https://arg3r3v.github.io/axolotl/juego.html">Videojuegos</a></li>
-        </ul>
-    </div>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Escena A-Frame Realista</title>
+    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+  </head>
+  <body>
+    <a-scene shadow="type: pcfsoft" 
+             renderer="antialias: true; colorManagement: true; physicallyCorrectLights: true; toneMapping: ACESFilmic; exposure: 1.0">
+      
+      <!-- Assets: modelos GLB separados -->
+      <a-assets>
+        <a-asset-item id="pisoModel" src="models/piso.glb"></a-asset-item>
+        <a-asset-item id="paredesModel" src="models/paredes.glb"></a-asset-item>
+        <a-asset-item id="techoModel" src="models/techo.glb"></a-asset-item>
+        <!-- Otros modelos de assets aquí -->
+      </a-assets>
 
-    <a-scene embedded vr-mode-ui="enabled: false">
-        <a-sky src="img/cuarto36015.png" rotation="0 0 0"></a-sky>
-        <a-entity 
-          id="cam"
-          camera
-          look-controls="touchEnabled: true; magicWindowTrackingEnabled: true; pointerLockEnabled: false"
-          wasd-controls="enabled: false"
-          position="0 1.6 0">
-          <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
+      <!-- Luces: ambiental + direccional -->
+      <a-entity light="type: ambient; color: #ffffff; intensity: 0.6;"></a-entity>
+      <a-entity light="type: directional; color: #ffffff; intensity: 0.4; 
+                       castShadow: true; shadowBias: -0.0005; shadowCameraVisible: false"
+                position="-5 3 2">
+      </a-entity>
+
+      <!-- Suelo receptor de sombras (invisible) -->
+      <a-entity id="shadowPlane" geometry="primitive: plane; width: 20; height: 20"
+                rotation="-90 0 0" position="0 0 0" shadow="receive: true"></a-entity>
+
+      <!-- Modelos GLB cargados -->
+      <a-entity gltf-model="#pisoModel" shadow="receive: true"></a-entity>
+      <a-entity gltf-model="#paredesModel" shadow="cast: true; receive: true"></a-entity>
+      <a-entity gltf-model="#techoModel" shadow="cast: true"></a-entity>
+      <!-- otros modelos y entidades aquí -->
+
+      <!-- Cámara y controles -->
+      <a-entity id="cameraRig">
+        <a-entity camera position="0 1.6 0"
+                  look-controls="pointerLockEnabled: true"
+                  wasd-controls="acceleration: 100; fly: false">
+        </a-entity>
+      </a-entity>
     </a-scene>
-    
-    <div id="poema">
-        <h2>PORQUE AÚN SOY JOVEN</h2>
-            <p class="poem">
-                Porque aún soy joven, y algo necio,<br>
-                Aún soy joven para errar sin malicia,<br>
-                Para amar con verdad y sin prisa,<br>
-                Para aprender lo que el tiempo avisa,<br>
-                Y perderme en charlas de risa,<br>
-                En conversaciones sin juicio.
-            </p>
-            <p class="poem">
-                Pobres los jóvenes que en la juventud se hallan,<br>
-                Tan enfermos de sueños que nunca estallan,<br>
-                Malaventurados los que deben soportar,<br>
-                La llama eterna que no pueden apagar.
-            </p>
-    </div>
 
-    <script defer src="script.js"></script>
-</body>
+    <script>
+      // Ajustar materia invisibilidad de plano de sombra al cargar la escena
+      document.querySelector('a-scene').addEventListener('loaded', () => {
+        const plane = document.querySelector('#shadowPlane');
+        const mesh = plane.getObject3D('mesh');
+        if (mesh) {
+          mesh.material = new THREE.ShadowMaterial({ opacity: 0.5 });
+          mesh.material.side = THREE.DoubleSide;
+        }
+        // Centrado automático: calcular bounding box de los modelos
+        const bbox = new THREE.Box3();
+        document.querySelectorAll('a-entity[gltf-model]').forEach(ent => {
+          const obj = ent.getObject3D('mesh');
+          if (obj) bbox.expandByObject(obj);
+        });
+        const center = bbox.getCenter(new THREE.Vector3());
+        const rig = document.querySelector('#cameraRig');
+        rig.object3D.position.set(center.x, center.y, center.z);
+      });
+    </script>
+  </body>
 </html>
