@@ -14,3 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
+
+  // Detecta si es móvil o escritorio
+  const isMobile = AFRAME.utils.device.isMobile();
+  
+  if (isMobile) {
+    document.querySelector("#greenLamp-mobile").setAttribute("visible", "true");
+  } else {
+    document.querySelector("#greenLamp-desktop").setAttribute("visible", "true");
+  }
