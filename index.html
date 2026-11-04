@@ -14,11 +14,11 @@
             schema: {
                 player: { type: 'string', default: '#rig' },
                 message: { type: 'string', default: '#monster-riddle' },
-                enterDistance: { type: 'number', default: 0.9, min: 0 },
-                exitDistance: { type: 'number', default: 1.15, min: 0 },
+                enterDistance: { type: 'number', default: 0.72, min: 0 },
+                exitDistance: { type: 'number', default: 0.92, min: 0 },
                 text: { type: 'string', default: 'El comienzo está donde termina el día.' },
                 width: { type: 'number', default: 0.95, min: 0.1 },
-                gap: { type: 'number', default: 0.08, min: 0 }
+                gap: { type: 'number', default: 0.12, min: 0 }
             },
 
             init: function () {
@@ -34,13 +34,17 @@
                 this.bounds = new THREE.Box3();
                 this.isNear = false;
                 this.hasBounds = false;
-                this.labelHeight = this.data.width * 320 / 1024;
+                this.labelHeight = this.data.width * 256 / 1024;
                 this.heightAboveOrigin = 0;
+                this.headBone = null;
+                this.headTipOffset = 0;
 
                 if (this.hint) this.createLabel();
-                this.onModelLoaded = this.updateLabelHeight.bind(this);
+                this.onModelLoaded = () => {
+                    this.hasBounds = false;
+                    this.headBone = null;
+                };
                 this.el.addEventListener('model-loaded', this.onModelLoaded);
-                this.updateLabelHeight();
                 this.checkProximity = AFRAME.utils.throttleTick(this.checkProximity, 100, this);
             },
 
@@ -48,15 +52,26 @@
                 const THREE = AFRAME.THREE;
                 const canvas = document.createElement('canvas');
                 canvas.width = 1024;
-                canvas.height = 320;
+                canvas.height = 256;
                 const context = canvas.getContext('2d');
+                const radius = 28;
+                context.fillStyle = '#000';
+                context.beginPath();
+                context.moveTo(radius, 0);
+                context.lineTo(canvas.width - radius, 0);
+                context.quadraticCurveTo(canvas.width, 0, canvas.width, radius);
+                context.lineTo(canvas.width, canvas.height - radius);
+                context.quadraticCurveTo(canvas.width, canvas.height, canvas.width - radius, canvas.height);
+                context.lineTo(radius, canvas.height);
+                context.quadraticCurveTo(0, canvas.height, 0, canvas.height - radius);
+                context.lineTo(0, radius);
+                context.quadraticCurveTo(0, 0, radius, 0);
+                context.closePath();
+                context.fill();
                 const header = document.querySelector('header h1') || document.body;
                 context.font = '400 64px ' + getComputedStyle(header).fontFamily;
                 context.textAlign = 'center';
                 context.textBaseline = 'middle';
-                context.lineJoin = 'round';
-                context.lineWidth = 5;
-                context.strokeStyle = 'rgba(0, 0, 0, 0.95)';
                 context.fillStyle = '#fff';
 
                 // Conserva la fuente y los acentos sin descargar otra fuente para 3D.
@@ -75,7 +90,6 @@
                 const firstY = canvas.height / 2 - (lines.length - 1) * 42;
                 lines.forEach((text, index) => {
                     const y = firstY + index * 84;
-                    context.strokeText(text, canvas.width / 2, y);
                     context.fillText(text, canvas.width / 2, y);
                 });
 
@@ -97,11 +111,27 @@
                 const mesh = this.el.getObject3D('mesh');
                 if (!mesh) return;
                 this.el.object3D.updateWorldMatrix(true, true);
-                this.bounds.setFromObject(mesh);
+                this.bounds.setFromObject(mesh, true);
                 if (this.bounds.isEmpty()) return;
                 this.el.object3D.getWorldPosition(this.monsterPosition);
                 this.heightAboveOrigin = Math.max(0, this.bounds.max.y - this.monsterPosition.y);
+                mesh.traverse(node => {
+                    if (!this.headBone && node.isBone && /^head/i.test(node.name)) {
+                        this.headBone = node;
+                    }
+                });
+                if (this.headBone) {
+                    this.headBone.getWorldPosition(this.labelPosition);
+                    this.headTipOffset = Math.max(0, this.bounds.max.y - this.labelPosition.y);
+                }
                 this.hasBounds = true;
+            },
+
+            tock: function () {
+                // Mide la figura una vez después del render, con la escala y la pose aplicadas.
+                if (!this.hasBounds && this.el.getObject3D('mesh')) {
+                    this.updateLabelHeight();
+                }
             },
 
             tick: function (time, delta) {
@@ -111,8 +141,14 @@
                 if (!camera) return;
 
                 // El texto es un objeto de la escena, independiente de la escala 0.1 del monstruo.
-                this.el.object3D.getWorldPosition(this.labelPosition);
-                this.labelPosition.y += this.heightAboveOrigin + this.data.gap + this.labelHeight / 2;
+                if (this.headBone) {
+                    this.headBone.getWorldPosition(this.labelPosition);
+                    this.labelPosition.y += this.headTipOffset;
+                } else {
+                    this.el.object3D.getWorldPosition(this.labelPosition);
+                    this.labelPosition.y += this.heightAboveOrigin;
+                }
+                this.labelPosition.y += this.data.gap + this.labelHeight / 2;
                 this.hint.object3D.parent.worldToLocal(this.labelPosition);
                 this.hint.object3D.position.copy(this.labelPosition);
 
@@ -128,7 +164,10 @@
                     this.setMessageVisible(false);
                     return;
                 }
-                if (!this.hasBounds) this.updateLabelHeight();
+                if (!this.hasBounds) {
+                    this.setMessageVisible(false);
+                    return;
+                }
                 this.player.object3D.getWorldPosition(this.playerPosition);
                 this.el.object3D.getWorldPosition(this.monsterPosition);
                 const dx = this.playerPosition.x - this.monsterPosition.x;
@@ -755,7 +794,7 @@
       <a-entity id="monster-riddle" visible="false" aria-hidden="true"
           aria-label="El comienzo está donde termina el día."></a-entity>
       <a-entity id="monstruo" gltf-model="#moustroModel"
-          monster-riddle-trigger="player: #rig; message: #monster-riddle; enterDistance: 0.9; exitDistance: 1.15"
+          monster-riddle-trigger="player: #rig; message: #monster-riddle; enterDistance: 0.72; exitDistance: 0.92; gap: 0.12"
           position="1.5 1.15 -0.5"
           scale="0.1 0.1 0.1"
           rotation="0 -90 0"
