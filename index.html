@@ -8,6 +8,78 @@
     <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.2/dist/aframe-extras.min.js"></script>
     
+    <!-- Acertijo por proximidad al monstruo -->
+    <script>
+        AFRAME.registerComponent('monster-riddle-trigger', {
+            schema: {
+                player: { type: 'string', default: '#rig' },
+                message: { type: 'string', default: '#monster-riddle' },
+                enterDistance: { type: 'number', default: 0.9, min: 0 },
+                exitDistance: { type: 'number', default: 1.15, min: 0 }
+            },
+
+            init: function () {
+                this.player = null;
+                this.hint = document.querySelector(this.data.message);
+                this.dialogs = Array.from(document.querySelectorAll('dialog'));
+                this.menu = document.getElementById('fullscreen-menu');
+                this.playerPosition = new AFRAME.THREE.Vector3();
+                this.monsterPosition = new AFRAME.THREE.Vector3();
+                this.isNear = false;
+
+                // Comprueba la cercanía diez veces por segundo sin crear otro bucle.
+                this.tick = AFRAME.utils.throttleTick(this.tick, 100, this);
+            },
+
+            tick: function () {
+                if (!this.hint) return;
+
+                if (!this.player) {
+                    this.player = this.el.sceneEl.querySelector(this.data.player);
+                }
+
+                if (!this.player || !this.el.getObject3D('mesh')) {
+                    this.setMessageVisible(false);
+                    return;
+                }
+
+                this.player.object3D.getWorldPosition(this.playerPosition);
+                this.el.object3D.getWorldPosition(this.monsterPosition);
+
+                // Mide la distancia sobre el suelo: la altura de la cámara no influye.
+                const dx = this.playerPosition.x - this.monsterPosition.x;
+                const dz = this.playerPosition.z - this.monsterPosition.z;
+                const distanceLimit = this.isNear
+                    ? Math.max(this.data.enterDistance, this.data.exitDistance)
+                    : this.data.enterDistance;
+
+                // Un margen de salida evita parpadeos al estar justo en el límite.
+                this.isNear = dx * dx + dz * dz <= distanceLimit * distanceLimit;
+
+                const interfaceOpen = this.dialogs.some(dialog => dialog.open) ||
+                    Boolean(this.menu && this.menu.classList.contains('open'));
+
+                this.setMessageVisible(this.isNear && !interfaceOpen);
+            },
+
+            setMessageVisible: function (visible) {
+                if (!this.hint) return;
+                const shouldHide = !visible;
+                if (this.hint.hidden !== shouldHide) {
+                    this.hint.hidden = shouldHide;
+                }
+            },
+
+            pause: function () {
+                this.isNear = false;
+                this.setMessageVisible(false);
+            },
+
+            remove: function () {
+                this.setMessageVisible(false);
+            }
+        });
+    </script>
     <style>
         body {
             font-family: 'Lora', serif;
@@ -437,6 +509,36 @@
             color: #fff;
             font-size: 14px;
         }
+        /* Acertijo del monstruo: aparece al acercarte sin bloquear los controles. */
+        #monster-riddle {
+            box-sizing: border-box;
+            position: fixed;
+            top: max(90px, 14vh);
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(560px, calc(100vw - 32px));
+            margin: 0;
+            padding: 16px 24px;
+            border: 0;
+            border-radius: 6px;
+            background: #000;
+            color: #fff;
+            font-family: inherit;
+            font-size: clamp(18px, 2vw, 24px);
+            line-height: 1.6;
+            letter-spacing: 0.04em;
+            text-align: center;
+            pointer-events: none;
+            z-index: 998;
+        }
+
+        #monster-riddle[hidden] {
+            display: none !important;
+        }
+
+        #monster-riddle p {
+            margin: 0;
+        }
     </style>
     <link rel="icon" href="img/logo.png" type="image/png">
 
@@ -520,6 +622,10 @@
         </ul>
     </div>
 
+    <!-- La pista no revela explícitamente que la entrada está en la cama. -->
+    <aside id="monster-riddle" role="status" aria-live="polite" aria-atomic="true" hidden>
+        <p>El comienzo está donde termina el día.</p>
+    </aside>
     <a-scene shadow="type: pcfsoft" 
              renderer="antialias: auto; colorManagement: true; toneMapping: ACESFilmic; exposure: 1.0; maxCanvasWidth: 1440; maxCanvasHeight: 1440" loading-screen="dotsColor: green; backgroundColor: black">
       
@@ -594,7 +700,8 @@
       <a-entity id="cuarto6_ent" gltf-model="#cuarto6" shadow="cast: true; receive: true"></a-entity>
       <a-entity id="cuarto7_ent" gltf-model="#cuarto7" shadow="cast: true; receive: true"></a-entity>
 
-      <a-entity gltf-model="#moustroModel"
+      <a-entity id="monstruo" gltf-model="#moustroModel"
+          monster-riddle-trigger="player: #rig; message: #monster-riddle; enterDistance: 0.9; exitDistance: 1.15"
           position="1.5 1.15 -0.5"
           scale="0.1 0.1 0.1"
           rotation="0 -90 0"
