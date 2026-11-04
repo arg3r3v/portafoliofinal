@@ -16,7 +16,7 @@
                 message: { type: 'string', default: '#monster-riddle' },
                 enterDistance: { type: 'number', default: 0.72, min: 0 },
                 exitDistance: { type: 'number', default: 0.92, min: 0 },
-                text: { type: 'string', default: 'El comienzo está donde termina el día.' },
+                text: { type: 'string', default: 'Cada noche cruzas una puerta sin levantarte.' },
                 width: { type: 'number', default: 0.95, min: 0.1 },
                 gap: { type: 'number', default: 0.12, min: 0 }
             },
@@ -792,7 +792,7 @@
 
       <!-- Texto flotante dentro del entorno 3D, sobre la cabeza del monstruo. -->
       <a-entity id="monster-riddle" visible="false" aria-hidden="true"
-          aria-label="El comienzo está donde termina el día."></a-entity>
+          aria-label="Cada noche cruzas una puerta sin levantarte."></a-entity>
       <a-entity id="monstruo" gltf-model="#moustroModel"
           monster-riddle-trigger="player: #rig; message: #monster-riddle; enterDistance: 0.72; exitDistance: 0.92; gap: 0.12"
           position="1.5 1.15 -0.5"
